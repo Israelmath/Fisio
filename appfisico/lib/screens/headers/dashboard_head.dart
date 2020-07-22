@@ -11,7 +11,7 @@ class HeadDashboard extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            height: size.height * 0.2 - 24,
+            height: size.height * 0.2 - 36,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -29,10 +29,6 @@ class HeadDashboard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: CircleAvatar(),
-              ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 16),
                 child: Text(

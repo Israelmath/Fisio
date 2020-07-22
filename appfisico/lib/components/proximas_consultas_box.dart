@@ -6,7 +6,8 @@ class NextInterviews extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-      width: size.width,
+      width: size.width - 16,
+      height: size.height - 320,
       margin: EdgeInsets.only(top: 24),
       padding: EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
@@ -14,6 +15,8 @@ class NextInterviews extends StatelessWidget {
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
           topRight: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+          bottomLeft: Radius.circular(10),
         ),
       ),
       child: Column(
@@ -26,7 +29,11 @@ class NextInterviews extends StatelessWidget {
               fontFamily: 'Ruda',
             ),
           ),
-          SingleChildScrollView(),
+          SingleChildScrollView(
+            child: Container(
+              color: Colors.teal,
+            ),
+          ),
         ],
       ),
     );
