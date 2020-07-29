@@ -4,9 +4,10 @@ class ClientTileForm extends StatelessWidget {
   final IconData icon;
   final String hint;
   bool nomeController;
+  bool tecladoNumerico;
   final Function _getContent;
 
-  ClientTileForm(this.icon, this.hint, this._getContent, {this.nomeController});
+  ClientTileForm(this.icon, this.hint, this._getContent, {this.nomeController, this.tecladoNumerico});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,7 @@ class ClientTileForm extends StatelessWidget {
               ),
             ),
             child: TextField(
+              keyboardType: tecladoNumerico != null ? TextInputType.number : null,
               onChanged: (text) {
                 _getContent(text, hint, nomeController == null ? false : true);
               },

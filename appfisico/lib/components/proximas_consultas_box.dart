@@ -1,6 +1,27 @@
+import 'package:appfisico/components/client_card.dart';
+import 'package:appfisico/dao/cliente_dao.dart';
+import 'package:appfisico/models/cliente.dart';
 import 'package:flutter/material.dart';
 
-class NextInterviews extends StatelessWidget {
+class NextInterviews extends StatefulWidget {
+  @override
+  _NextInterviewsState createState() => _NextInterviewsState();
+}
+
+class _NextInterviewsState extends State<NextInterviews> {
+
+  ClientDao _clienteDao = ClientDao();
+  List<Cliente> clientesList = List();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _clienteDao.getAllClientes().then((list){
+      clientesList = list;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,11 +50,18 @@ class NextInterviews extends StatelessWidget {
               fontFamily: 'Ruda',
             ),
           ),
-          SingleChildScrollView(
-            child: Container(
-              color: Colors.teal,
-            ),
+          Container(
+            color: Colors.teal,
           ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.all(8.0),
+              itemCount: clientesList.length,
+              itemBuilder: (context, index){
+                return ClientCard(context, clientesList[index]);
+              },
+            ),
+          )
         ],
       ),
     );

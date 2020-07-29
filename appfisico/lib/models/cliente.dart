@@ -3,9 +3,9 @@ class Cliente{
   String nome;
   String sobrenome;
   String email;
-  int cel;
-  int cpf;
-  bool particular;
+  String cel;
+  String cpf;
+  int particular;
   String fotoUrl;
 
   Cliente();
