@@ -1,7 +1,12 @@
 import 'package:appfisico/components/client_card.dart';
+import 'package:appfisico/components/menus/opcoes_contato.dart';
 import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 
 class NextInterviews extends StatefulWidget {
   @override
@@ -9,22 +14,23 @@ class NextInterviews extends StatefulWidget {
 }
 
 class _NextInterviewsState extends State<NextInterviews> {
-
   ClientDao _clienteDao = ClientDao();
-  List<Cliente> clientesList = List();
+
+  ClientesStore clienteStore;
 
   @override
   void initState() {
     super.initState();
 
-    _clienteDao.getAllClientes().then((list){
-      clientesList = list;
+    _clienteDao.getAllClientes().then((list) {
+      clienteStore.clientesList = list.asObservable();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    clienteStore = Provider.of<ClientesStore>(context);
 
     return Container(
       width: size.width - 16,
@@ -54,11 +60,27 @@ class _NextInterviewsState extends State<NextInterviews> {
             color: Colors.teal,
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
-              itemCount: clientesList.length,
-              itemBuilder: (context, index){
-                return ClientCard(context, clientesList[index]);
+            child: Observer(
+              builder: (_) {
+                return ListView.builder(
+                  padding: EdgeInsets.all(8.0),
+                  itemCount: clienteStore.clientesList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onLongPress: () {
+                        print('Length: ${clienteStore.clientesList.length}');
+                        apresentaMenu(
+                            context, clienteStore, index, _clienteDao);
+                      },
+                      child: Container(
+                        height: 100,
+                        padding: EdgeInsets.only(top: 4),
+                        child: ClientCard(
+                            context, clienteStore.clientesList[index]),
+                      ),
+                    );
+                  },
+                );
               },
             ),
           )

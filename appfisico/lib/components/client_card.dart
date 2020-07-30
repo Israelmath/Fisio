@@ -3,69 +3,70 @@ import 'dart:io';
 import 'package:appfisico/models/cliente.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 Widget ClientCard(BuildContext context, Cliente cliente) {
-  return Row(
+  String teste = _getText(cliente);
+
+  return Stack(
+    overflow: Overflow.clip,
     children: <Widget>[
-      Card(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: _getImage(cliente),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+      Positioned(
+        bottom: 0,
+        right: 0,
+        width: 90,
+        height: 50,
+        child: Card(
+          color: _getColor(cliente),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: Text(teste, style: TextStyle(color: Colors.white),),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  '${cliente.nome} ${cliente.sobrenome}',
-                  style: TextStyle(
-                    fontFamily: 'Ruda',
-                    fontSize: 24,
-                  ),
-                ),
-                Text(
-                  cliente.email,
-                  style: TextStyle(
-                    fontFamily: 'Ruda',
-                  ),
-                ),
-                Text(cliente.cpf),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
       Container(
-        width: 80,
-        height: 75,
+        height: 80,
         child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Icon(
-                _getIcon(cliente),
-                color: Colors.teal,
-                size: 36,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: _getImage(cliente),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
               ),
-              Text(
-                cliente.particular == 1 ? 'Particular' : 'Clinica',
-                style: TextStyle(
-                  color: Colors.teal,
-                  fontFamily: 'Ruda',
-                  fontSize: 12,
+              Container(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '${cliente.nome} ${cliente.sobrenome}',
+                      style: TextStyle(
+                        fontFamily: 'Ruda',
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      cliente.email,
+                      style: TextStyle(
+                        fontFamily: 'Ruda',
+                      ),
+                    ),
+                    Text(cliente.cpf),
+                  ],
                 ),
               ),
             ],
@@ -84,10 +85,18 @@ _getImage(Cliente cliente) {
   }
 }
 
-_getIcon(Cliente cliente) {
+String _getText(Cliente cliente) {
   if (cliente.particular == 1) {
-    return Icons.local_parking;
+    return 'Particular';
   } else {
-    return Icons.copyright;
+    return 'Clínica';
+  }
+}
+
+_getColor(Cliente cliente) {
+  if (cliente.particular == 1) {
+    return Colors.blue;
+  } else {
+    return Colors.redAccent;
   }
 }

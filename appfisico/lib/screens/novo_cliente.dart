@@ -3,8 +3,10 @@ import 'package:appfisico/auxiliar/auxiliar_functions.dart';
 import 'package:appfisico/components/client_tile_form.dart';
 import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class NewClientForm extends StatefulWidget {
   @override
@@ -20,13 +22,14 @@ class _NewClientFormState extends State<NewClientForm> {
   int cpf;
   Cliente _editingContact = Cliente();
   bool _newClient = true;
-
   ClientDao _clientDao = ClientDao();
+  ClientesStore clientesStore;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     _editingContact.particular = 1;
+    clientesStore = Provider.of<ClientesStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +117,7 @@ class _NewClientFormState extends State<NewClientForm> {
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withOpacity(0.25),
                           offset: Offset(0, 2),
                           blurRadius: 6)
                     ],
@@ -260,6 +263,7 @@ class _NewClientFormState extends State<NewClientForm> {
                     color: Colors.blueAccent,
                     onPressed: () {
                       _send();
+                      Navigator.pop(context);
                     },
                     child: Text(
                       'Cadastrar',
@@ -307,6 +311,7 @@ class _NewClientFormState extends State<NewClientForm> {
       _editingContact.particular = 0;
     else
       _editingContact.particular = 1;
+    clientesStore.adicionaCliente(clientesStore.clientesList, _editingContact);
     _clientDao.saveCliente(_editingContact);
   }
 }

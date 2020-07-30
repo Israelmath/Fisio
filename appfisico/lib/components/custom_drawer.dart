@@ -1,4 +1,5 @@
 import 'package:appfisico/components/drawer_tile.dart';
+import 'package:appfisico/screens/novo_cliente.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -83,6 +84,30 @@ class CustomDrawer extends StatelessWidget {
               DrawerTile('Início', Icons.home),
               DrawerTile('Consultas', Icons.assignment),
               DrawerTile('Pacientes', Icons.person),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 33, vertical: 260),
+                child: ButtonTheme(
+                  child: RaisedButton(
+                    child: Text(
+                      'Adicionar cliente',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Ruda'
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NewClientForm(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ],

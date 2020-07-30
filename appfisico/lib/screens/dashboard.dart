@@ -8,7 +8,6 @@ import 'headers/dashboard_head.dart';
 class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       drawer: CustomDrawer(),

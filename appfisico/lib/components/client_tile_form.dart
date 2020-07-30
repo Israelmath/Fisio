@@ -1,4 +1,6 @@
+import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ClientTileForm extends StatelessWidget {
   final IconData icon;
@@ -6,6 +8,7 @@ class ClientTileForm extends StatelessWidget {
   bool nomeController;
   bool tecladoNumerico;
   final Function _getContent;
+
 
   ClientTileForm(this.icon, this.hint, this._getContent, {this.nomeController, this.tecladoNumerico});
 

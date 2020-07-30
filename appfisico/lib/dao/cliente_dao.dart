@@ -99,7 +99,6 @@ class ClientDao {
   }
 
   Future<List> getAllClientes() async {
-    print('getAllClientes: Entrou!');
     Database dbCliente = await db;
     List mapsClientesList = await dbCliente.rawQuery('SELECT * FROM $clienteTable');
     List<Cliente> clientesList = List();
