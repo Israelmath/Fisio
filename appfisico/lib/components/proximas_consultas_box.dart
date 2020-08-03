@@ -2,6 +2,7 @@ import 'package:appfisico/components/client_card.dart';
 import 'package:appfisico/components/menus/opcoes_contato.dart';
 import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/screens/cliente_tela.dart';
 import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -67,16 +68,18 @@ class _NextInterviewsState extends State<NextInterviews> {
                   itemCount: clienteStore.clientesList.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return ClienteTela(clienteStore.clientesList[index]);
+                        }));
+                      },
                       onLongPress: () {
-                        print('Length: ${clienteStore.clientesList.length}');
-                        apresentaMenu(
-                            context, clienteStore, index, _clienteDao);
+                        apresentaMenu(context, clienteStore, index, _clienteDao);
                       },
                       child: Container(
                         height: 100,
                         padding: EdgeInsets.only(top: 4),
-                        child: ClientCard(
-                            context, clienteStore.clientesList[index]),
+                        child: ClientCard(context, clienteStore.clientesList[index]),
                       ),
                     );
                   },

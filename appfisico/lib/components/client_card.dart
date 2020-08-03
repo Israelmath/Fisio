@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appfisico/auxiliar/auxiliar_functions.dart';
 import 'package:appfisico/models/cliente.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +53,7 @@ Widget ClientCard(BuildContext context, Cliente cliente) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      '${cliente.nome} ${cliente.sobrenome}',
+                    Text( mascaraNome('${cliente.nome} ${cliente.sobrenome}'),
                       style: TextStyle(
                         fontFamily: 'Ruda',
                         fontSize: 24,
@@ -65,7 +65,7 @@ Widget ClientCard(BuildContext context, Cliente cliente) {
                         fontFamily: 'Ruda',
                       ),
                     ),
-                    Text(cliente.cpf),
+                    Text(mascaraCpf(cliente.cpf)),
                   ],
                 ),
               ),

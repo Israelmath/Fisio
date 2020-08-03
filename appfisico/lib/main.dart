@@ -1,3 +1,6 @@
+import 'package:appfisico/dao/cliente_dao.dart';
+import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/screens/cliente_tela.dart';
 import 'package:appfisico/screens/dashboard.dart';
 import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:provider/provider.dart';
 void main() => runApp(Fisio());
 
 class Fisio extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
 

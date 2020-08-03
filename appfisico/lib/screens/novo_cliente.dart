@@ -9,33 +9,44 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class NewClientForm extends StatefulWidget {
+  final Cliente cliente;
+
+  NewClientForm({this.cliente});
+
   @override
   _NewClientFormState createState() => _NewClientFormState();
 }
 
 class _NewClientFormState extends State<NewClientForm> {
-  String _cliente = 'Novo cliente';
-  String nome;
-  String sobrenome;
-  String email;
-  int cel;
-  int cpf;
-  Cliente _editingContact = Cliente();
-  bool _newClient = true;
+  String _cliente;
+  Cliente _editingContact;
+  bool _newClient;
   ClientDao _clientDao = ClientDao();
   ClientesStore clientesStore;
+
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _sobrenomeController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _celularController = TextEditingController();
+  TextEditingController _cpfController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    inicaTela();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    _editingContact.particular = 1;
     clientesStore = Provider.of<ClientesStore>(context);
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text(
-          _cliente,
+          mascaraNome(_cliente),
           style: TextStyle(
             fontFamily: 'Ruda',
             fontSize: 24,
@@ -81,8 +92,8 @@ class _NewClientFormState extends State<NewClientForm> {
                   ),
                 ),
                 Text(
-                  _editingContact.cel != null
-                      ? mascaraCpf(_editingContact.cel)
+                  _editingContact.celular != null
+                      ? mascaraCelular(_editingContact.celular)
                       : '',
                   style: TextStyle(
                     color: Colors.white,
@@ -106,7 +117,6 @@ class _NewClientFormState extends State<NewClientForm> {
                   else {
                     setState(() {
                       _editingContact.fotoUrl = url.path;
-                      print(_editingContact.fotoUrl);
                     });
                   }
                 });
@@ -115,18 +125,20 @@ class _NewClientFormState extends State<NewClientForm> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          offset: Offset(0, 2),
-                          blurRadius: 6)
-                    ],
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: _editingContact.fotoUrl != null
-                            ? FileImage(File(_editingContact.fotoUrl))
-                            : AssetImage('images/person.png'))),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        offset: Offset(0, 2),
+                        blurRadius: 6)
+                  ],
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: _editingContact.fotoUrl != null
+                        ? FileImage(File(_editingContact.fotoUrl))
+                        : AssetImage('images/person.png'),
+                  ),
+                ),
               ),
             ),
           ),
@@ -159,16 +171,25 @@ class _NewClientFormState extends State<NewClientForm> {
                     ),
                   ),
                   ClientTileForm(Icons.account_circle, 'Nome', getContent,
-                      nomeController: true),
+                      infoController: _nomeController, firstName: true),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
-                    child:
-                        ClientTileForm(Icons.person, 'Sobrenome', getContent),
+                    child: ClientTileForm(
+                      Icons.person,
+                      'Sobrenome',
+                      getContent,
+                      infoController: _sobrenomeController,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: ClientTileForm(
-                        Icons.alternate_email, 'Email', getContent),
+                      Icons.alternate_email,
+                      'Email',
+                      getContent,
+                      infoController: _emailController,
+                      teclado: TextInputType.emailAddress,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
@@ -176,7 +197,8 @@ class _NewClientFormState extends State<NewClientForm> {
                       Icons.phone_android,
                       'Celular',
                       getContent,
-                      tecladoNumerico: true,
+                      teclado: TextInputType.number,
+                      infoController: _celularController,
                     ),
                   ),
                   Padding(
@@ -185,7 +207,8 @@ class _NewClientFormState extends State<NewClientForm> {
                       Icons.assignment_ind,
                       'CPF',
                       getContent,
-                      tecladoNumerico: true,
+                      infoController: _cpfController,
+                      teclado: TextInputType.number,
                     ),
                   ),
                   Padding(
@@ -283,6 +306,26 @@ class _NewClientFormState extends State<NewClientForm> {
     );
   }
 
+  void inicaTela() {
+    if (widget.cliente == null) {
+      _editingContact = Cliente();
+      _newClient = true;
+      _cliente = 'Novo cliente';
+      _newClient = true;
+      _editingContact.particular = 1;
+    } else {
+      _nomeController.text = widget.cliente.nome;
+      _sobrenomeController.text = widget.cliente.sobrenome;
+      _emailController.text = widget.cliente.email;
+      _celularController.text = widget.cliente.celular;
+      _cpfController.text = widget.cliente.cpf;
+
+      _editingContact = widget.cliente;
+      _newClient = widget.cliente.particular == 1 ? true : false;
+      _cliente = '${widget.cliente.nome} ${widget.cliente.sobrenome}';
+    }
+  }
+
   void getContent(String content, String campo, bool nomeController) {
     if (nomeController == true) {
       _editingContact.nome = content;
@@ -302,7 +345,7 @@ class _NewClientFormState extends State<NewClientForm> {
     } else if (campo == 'Email')
       _editingContact.email = content;
     else if (campo == 'Celular')
-      _editingContact.cel = content;
+      _editingContact.celular = content;
     else if (campo == 'CPF') _editingContact.cpf = content;
   }
 
@@ -311,7 +354,14 @@ class _NewClientFormState extends State<NewClientForm> {
       _editingContact.particular = 0;
     else
       _editingContact.particular = 1;
-    clientesStore.adicionaCliente(clientesStore.clientesList, _editingContact);
-    _clientDao.saveCliente(_editingContact);
+    if (widget.cliente == null) {
+      clientesStore.adicionaCliente(
+          clientesStore.clientesList, _editingContact);
+      _clientDao.saveCliente(_editingContact);
+    } else {
+      clientesStore.clientesList.remove(widget.cliente);
+      clientesStore.clientesList.add(_editingContact);
+      _clientDao.updateCliente(_editingContact);
+    }
   }
 }

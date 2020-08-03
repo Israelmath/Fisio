@@ -1,16 +1,15 @@
-import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ClientTileForm extends StatelessWidget {
   final IconData icon;
   final String hint;
-  bool nomeController;
-  bool tecladoNumerico;
+  bool firstName;
+  TextInputType teclado;
   final Function _getContent;
 
+  TextEditingController infoController;
 
-  ClientTileForm(this.icon, this.hint, this._getContent, {this.nomeController, this.tecladoNumerico});
+  ClientTileForm(this.icon, this.hint, this._getContent, {this.infoController, this.firstName, this.teclado});
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +48,10 @@ class ClientTileForm extends StatelessWidget {
               ),
             ),
             child: TextField(
-              keyboardType: tecladoNumerico != null ? TextInputType.number : null,
+              controller: infoController,
+              keyboardType: teclado != null ? teclado : null,
               onChanged: (text) {
-                _getContent(text, hint, nomeController == null ? false : true);
+                _getContent(text, hint, firstName == null ? false : true);
               },
               decoration: InputDecoration(
                 enabledBorder: InputBorder.none,

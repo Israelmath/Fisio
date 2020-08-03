@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appfisico/models/cliente.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -9,8 +10,10 @@ class ClientDao {
   final String idColumn = 'idColumn';
   final String nameColumn = 'nameColumn';
   final String sobrenomeColumn = 'sobrenomeColumn';
+  final String celularColumn = 'celularColumn';
   final String emailColumn = 'emailColumn';
   final String cpfColumn = 'cpfColumn';
+  final String avaliacaoColumn = 'avaliacaoColumn';
   final String particularColumn = 'cpfColumn';
   final String fotoUrlColumn = 'fotoUrlColumn';
 
@@ -18,9 +21,11 @@ class ClientDao {
       "idColumn INTEGER PRIMARY KEY,"
       "nameColumn TEXT,"
       "sobrenomeColumn TEXT,"
+      "celularColumn TEXT,"
       "emailColumn TEXT,"
       "cpfColumn TEXT,"
       "particularColumn INTEGER,"
+      "avaliacaoColumn TEXT,"
       "fotoUrlColumn TEXT)";
 
   final String nomeDb = 'calendor.db';
@@ -45,7 +50,7 @@ class ClientDao {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, nomeDb);
 
-    return await openDatabase(path, version: 1,
+    return await openDatabase(path, version: 1, onDowngrade: onDatabaseDowngradeDelete,
         onCreate: (Database db, int newerVersion) async {
       await db.execute(dbConfig);
     });
@@ -53,8 +58,8 @@ class ClientDao {
 
   Future<Cliente> saveCliente(Cliente cliente) async {
     Database dbCliente = await db;
-    cliente.id = await dbCliente.insert(clienteTable, cliente.toMap());
-    print('save: $cliente');
+    cliente.id = await dbCliente.insert(clienteTable, cliente.toMap()).catchError((erro)=>debugPrint('$erro'));
+    debugPrint('$cliente');
     return cliente;
   }
 
@@ -65,8 +70,10 @@ class ClientDao {
           idColumn,
           nameColumn,
           sobrenomeColumn,
+          celularColumn,
           emailColumn,
           cpfColumn,
+          avaliacaoColumn,
           particularColumn,
           fotoUrlColumn
         ],
@@ -100,7 +107,10 @@ class ClientDao {
 
   Future<List> getAllClientes() async {
     Database dbCliente = await db;
-    List mapsClientesList = await dbCliente.rawQuery('SELECT * FROM $clienteTable');
+    List mapsClientesList = await dbCliente.rawQuery('SELECT * FROM $clienteTable').catchError((erro){
+      if(erro != null)
+        return List<Map<String, dynamic>>();
+    });
     List<Cliente> clientesList = List();
     for (Map clt in mapsClientesList){
       clientesList.add(Cliente.fromMap(clt));

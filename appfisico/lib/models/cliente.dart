@@ -3,8 +3,9 @@ class Cliente{
   String nome;
   String sobrenome;
   String email;
-  String cel;
+  String celular;
   String cpf;
+  String avaliacao = 'Sem avaliação';
   int particular;
   String fotoUrl;
 
@@ -14,8 +15,10 @@ class Cliente{
     id = map['idColumn'];
     nome = map['nameColumn'];
     sobrenome = map['sobrenomeColumn'];
+    celular = map['celularColumn'];
     email = map['emailColumn'];
     cpf = map['cpfColumn'];
+    avaliacao = map['avaliacaoColumn'];
     particular = map['particularColumn'];
     fotoUrl = map['fotoUrlColumn'];
   }
@@ -24,9 +27,11 @@ class Cliente{
     Map<String, dynamic> mapCliente = {
       'nameColumn': nome,
       'sobrenomeColumn': sobrenome,
+      'celularColumn': celular,
       'emailColumn': email,
       'cpfColumn': cpf,
       'particularColumn': particular,
+      'avaliacaoColumn': avaliacao,
       'fotoUrlColumn': fotoUrl
     };
     if(id != null){
@@ -37,6 +42,6 @@ class Cliente{
 
   @override
   String toString() {
-    return 'Cliente{id: $id, nome: $nome, sobrenome: $sobrenome, email: $email, cpf: $cpf, particular: $particular, fotoUrl: $fotoUrl}';
+    return 'Cliente{id: $id, nome: $nome, sobrenome: $sobrenome, email: $email, celular: $celular, cpf: $cpf, avaliacao: $avaliacao, particular: $particular, fotoUrl: $fotoUrl}';
   }
 }

@@ -1,4 +1,5 @@
 import 'package:appfisico/dao/cliente_dao.dart';
+import 'package:appfisico/screens/novo_cliente.dart';
 import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
 
@@ -28,9 +29,18 @@ apresentaMenu(
                     Padding(
                       padding: const EdgeInsets.only(top: 6.0),
                       child: FlatButton(
-                        onPressed: () {
-                          print(
-                              'Editando cliente: ${store.clientesList[index]}');
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return NewClientForm(
+                                  cliente: store.clientesList[index],
+                                );
+                              },
+                            ),
+                          );
+                          print('Editando: ${store.clientesList[index]}');
                           Navigator.pop(context);
                         },
                         child: Text(
