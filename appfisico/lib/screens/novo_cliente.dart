@@ -289,7 +289,7 @@ class _NewClientFormState extends State<NewClientForm> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      'Cadastrar',
+                      widget.cliente == null ? 'Cadastrar' : 'Editar',
                       style: TextStyle(
                         fontSize: 24,
                         fontFamily: 'Ruda',

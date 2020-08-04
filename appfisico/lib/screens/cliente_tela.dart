@@ -1,14 +1,23 @@
 import 'package:appfisico/components/card_avaliacao.dart';
-import 'package:appfisico/components/consultas_barra_lateral.dart';
-import 'package:appfisico/components/opcoes_laterais.dart';
+import 'package:appfisico/components/opcoes_lateral_esquerda.dart';
+import 'package:appfisico/components/info_lateral_direita.dart';
+import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/models/cliente.dart';
 import 'package:appfisico/screens/headers/cliente_tela_head.dart';
+import 'package:appfisico/screens/novo_cliente.dart';
 import 'package:flutter/material.dart';
 
-class ClienteTela extends StatelessWidget {
+class ClienteTela extends StatefulWidget {
   Cliente cliente;
 
   ClienteTela(this.cliente);
+
+  @override
+  _ClienteTelaState createState() => _ClienteTelaState();
+}
+
+class _ClienteTelaState extends State<ClienteTela> {
+  ClientDao _dao = ClientDao();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,7 @@ class ClienteTela extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${cliente.nome} ${cliente.sobrenome}',
+          '${widget.cliente.nome} ${widget.cliente.sobrenome}',
           style: TextStyle(
             fontFamily: 'Ruda',
             fontSize: 24,
@@ -31,23 +40,31 @@ class ClienteTela extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              debugPrint('Editando...');
+              setState(() {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewClientForm(cliente: widget.cliente)));
+              });
             },
           ),
         ],
       ),
       body: Column(
         children: <Widget>[
-          ClienteHeader(cliente),
-          CardAvaliacao(cliente),
+          ClienteHeader(widget.cliente),
+          CardAvaliacao(callback, avaliacao: widget.cliente.avaliacao),
           Row(
             children: <Widget>[
               ConsultasBarraLateral(),
-              OpcoesLaterais(cliente),
+              OpcoesLaterais(widget.cliente),
             ],
           ),
         ],
       ),
     );
+  }
+  void callback(String avaliacao){
+    setState(() {
+      widget.cliente.avaliacao = avaliacao;
+      _dao.updateCliente(widget.cliente);
+    });
   }
 }

@@ -1,10 +1,10 @@
-import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/components/dialog_avaliacao.dart';
 import 'package:flutter/material.dart';
 
 class CardAvaliacao extends StatelessWidget {
-  final Cliente _cliente;
-
-  CardAvaliacao(this._cliente);
+  Function callback;
+  String avaliacao;
+  CardAvaliacao(this.callback, {@required this.avaliacao});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,12 @@ class CardAvaliacao extends StatelessWidget {
       height: 150,
       child: Card(
         elevation: 2,
-        color: Colors.grey[200],
+        color: Colors.grey[100],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
@@ -31,22 +32,27 @@ class CardAvaliacao extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
                   child: Card(
                     elevation: 2,
-                    child: Icon(Icons.edit),
+                    child: GestureDetector(
+                      child: Icon(Icons.edit),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return DialogAvaliacao(callback);
+                            });
+                      },
+                    ),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                '${_cliente.avaliacao}',
-                style: TextStyle(
-                  fontFamily: 'Ruda',
-                  color: Colors.black,
-                ),
+              padding: const EdgeInsets.all(8.0),
+              child: Text( '${avaliacao}',
+                style: TextStyle(color: Colors.black, fontFamily: 'Ruda'),
               ),
             ),
           ],
