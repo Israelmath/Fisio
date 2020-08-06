@@ -1,5 +1,6 @@
 import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/screens/calendario_consulta.dart';
 import 'package:appfisico/screens/cliente_tela.dart';
 import 'package:appfisico/screens/dashboard.dart';
 import 'package:appfisico/stores/cliente_store.dart';
@@ -23,7 +24,7 @@ class Fisio extends StatelessWidget {
           textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.purple[600],),
           primaryColor: Colors.purple[600],
         ),
-        home: Dashboard(),
+        home: CalendarioConsulta(),
       ),
     );
   }

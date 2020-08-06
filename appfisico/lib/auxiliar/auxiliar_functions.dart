@@ -39,3 +39,26 @@ String verificaOrigem(int org){
   if(org == 1) return 'Particular';
   else return 'Clínica';
 }
+
+String mascaraData(DateTime data){
+  int _dia = data.day;
+  int _mes = data.month;
+  int _ano = data.year;
+
+  Map meses = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro'
+  };
+
+  return '$_dia de ${meses[_mes]} de $_ano';
+}
