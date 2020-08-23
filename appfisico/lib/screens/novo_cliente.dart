@@ -355,8 +355,7 @@ class _NewClientFormState extends State<NewClientForm> {
     else
       _editingContact.particular = 1;
     if (widget.cliente == null) {
-      clientesStore.adicionaCliente(
-          clientesStore.clientesList, _editingContact);
+      clientesStore.adicionaCliente(_editingContact);
       _clientDao.saveCliente(_editingContact);
     } else {
       clientesStore.clientesList.remove(widget.cliente);

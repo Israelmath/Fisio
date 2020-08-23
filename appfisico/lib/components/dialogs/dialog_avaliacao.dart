@@ -22,15 +22,15 @@ class DialogAvaliacao extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text('Confirmar'),
+          child: Text('Cancelar'),
           onPressed: () {
-            callback(_avaliacaoController.text);
             Navigator.pop(context);
           },
         ),
         FlatButton(
-          child: Text('Cancelar'),
+          child: Text('Confirmar'),
           onPressed: () {
+            callback(_avaliacaoController.text);
             Navigator.pop(context);
           },
         ),

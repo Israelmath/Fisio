@@ -1,37 +1,32 @@
+import 'package:appfisico/components/card_consulta.dart';
 import 'package:appfisico/components/client_card.dart';
 import 'package:appfisico/components/menus/opcoes_contato.dart';
 import 'package:appfisico/dao/cliente_dao.dart';
+import 'package:appfisico/dao/consultas_dao.dart';
 import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/models/consulta.dart';
 import 'package:appfisico/screens/cliente_tela.dart';
+import 'package:appfisico/stores/calendario_store.dart';
 import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-class NextInterviews extends StatefulWidget {
+class ProximasConsultas extends StatefulWidget {
   @override
-  _NextInterviewsState createState() => _NextInterviewsState();
+  _ProximasConsultasState createState() => _ProximasConsultasState();
 }
 
-class _NextInterviewsState extends State<NextInterviews> {
+class _ProximasConsultasState extends State<ProximasConsultas> {
+  ConsultasDao _consultasDao = ConsultasDao();
+  CalendarioStore _consultasStore;
   ClientDao _clienteDao = ClientDao();
-
-  ClientesStore clienteStore;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _clienteDao.getAllClientes().then((list) {
-      clienteStore.clientesList = list.asObservable();
-    });
-  }
+  ClientesStore _clienteStore;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    clienteStore = Provider.of<ClientesStore>(context);
 
     return Container(
       width: size.width - 16,
@@ -63,25 +58,34 @@ class _NextInterviewsState extends State<NextInterviews> {
           Expanded(
             child: Observer(
               builder: (_) {
-                return ListView.builder(
-                  padding: EdgeInsets.all(8.0),
-                  itemCount: clienteStore.clientesList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return ClienteTela(clienteStore.clientesList[index]);
-                        }));
-                      },
-                      onLongPress: () {
-                        apresentaMenu(context, clienteStore, index, _clienteDao);
-                      },
-                      child: Container(
-                        height: 100,
-                        padding: EdgeInsets.only(top: 4),
-                        child: ClientCard(context, clienteStore.clientesList[index]),
-                      ),
-                    );
+                return FutureBuilder(
+                  future: _getInfo(),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        break;
+                      case ConnectionState.waiting:
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                        break;
+                      case ConnectionState.active:
+                        break;
+                      case ConnectionState.done:
+                        return ListView.builder(
+                          padding: EdgeInsets.all(8.0),
+                          itemCount: _consultasStore.listaConsultas.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 100,
+                              padding: EdgeInsets.only(top: 4),
+                              child: CardConsulta(
+                                  _consultasStore.listaConsultas[index], _clienteStore),
+                            );
+                          },
+                        );
+                    }
+                    return Text('Não rolou...');
                   },
                 );
               },
@@ -90,5 +94,13 @@ class _NextInterviewsState extends State<NextInterviews> {
         ],
       ),
     );
+  }
+
+  _getInfo() async {
+    _consultasStore = CalendarioStore();
+    _consultasDao.getProximasConsultas() = _consultasStore.listaConsultas as Observable;
+    _clienteDao.getAllClientes().then((clientesList) {
+      _clienteStore.clientesList = clientesList.asObservable();
+    });
   }
 }

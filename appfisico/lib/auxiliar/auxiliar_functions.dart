@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
+
+import 'modelos_auxiliares.dart';
 
 String mascaraCelular(String cel) {
   return '(${cel.substring(0, 2)}) ${cel.substring(2, 3)}.${cel.substring(3, 7)}-${cel.substring(7)}';
@@ -45,20 +48,37 @@ String mascaraData(DateTime data){
   int _mes = data.month;
   int _ano = data.year;
 
-  Map meses = {
-    1: 'Janeiro',
-    2: 'Fevereiro',
-    3: 'Março',
-    4: 'Abril',
-    5: 'Maio',
-    6: 'Junho',
-    7: 'Julho',
-    8: 'Agosto',
-    9: 'Setembro',
-    10: 'Outubro',
-    11: 'Novembro',
-    12: 'Dezembro'
-  };
+  final _meses = meses;
 
-  return '$_dia de ${meses[_mes]} de $_ano';
+  return '$_dia de ${_meses[_mes]} de $_ano';
+}
+
+String mascaraHora(DateTime data){
+  if(data != null) {
+    return '${data.hour}h${data.minute}';
+  }
+  else return '00h00';
+}
+
+String mascaraSemana(DateTime data){
+  if(data != null) {
+    return diaSemana[data.weekday];
+  }
+  else return 'Dia da semana';
+}
+
+ObservableList<DateTime> getSemana(DateTime data){
+  DateTime dia = data;
+  ObservableList<DateTime> semana = ObservableList<DateTime>();
+
+  while(dia.weekday != 7){
+    dia = dia.subtract(Duration(days: 1));
+  }
+
+  while(dia.weekday != 6){
+    semana.add(dia);
+    dia = dia.add(Duration(days: 1));
+  }
+  semana.add(dia);
+  return semana;
 }

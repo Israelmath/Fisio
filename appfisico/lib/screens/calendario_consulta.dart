@@ -1,17 +1,32 @@
 import 'package:appfisico/auxiliar/auxiliar_functions.dart';
+import 'package:appfisico/components/card_consulta.dart';
+import 'package:appfisico/components/dialogs/dialog_consulta.dart';
+import 'package:appfisico/components/mini_cliente_card.dart';
+import 'package:appfisico/dao/cliente_dao.dart';
+import 'package:appfisico/dao/consultas_dao.dart';
+import 'package:appfisico/models/cliente.dart';
+import 'package:appfisico/models/consulta.dart';
 import 'package:appfisico/stores/calendario_store.dart';
+import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 import 'headers/nova_consulta_head.dart';
 
 class CalendarioConsulta extends StatelessWidget {
   CalendarioStore _calendarioStore;
+  ConsultasDao _consultasDao;
+  ClientesStore _clientesStore;
 
   @override
   Widget build(BuildContext context) {
+    _consultasDao = ConsultasDao();
     _calendarioStore = CalendarioStore();
+    _consultasDao.getAllData(DateTime.now()).then((list) {
+      _calendarioStore.listaConsultas = list.asObservable();
+    });
 
     return Scaffold(
         appBar: AppBar(
@@ -37,53 +52,8 @@ class CalendarioConsulta extends StatelessWidget {
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  contentPadding: EdgeInsets.all(16),
-                      title: Text(
-                        'Marcar consulta',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 24, fontFamily: 'Ruda'),
-                      ),
-                      content: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 200.0),
-                            child: Image.asset('images/calendar.png', scale: 1.95),
-                          ),
-//                          Divider(thickness: 2),
-                          TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Título',
-                            ),
-                          ),
-//                          Divider(thickness: 2),
-                          Row(
-                            children: <Widget>[
-                              FlatButton(
-                                onPressed: (){
-                                  print('Qua, 05 de Ago de 2020');
-                                },
-                                child: Text('Qua, \n05 de ago de 2020'),
-                              ),
-                              FlatButton(
-                                onPressed: (){
-                                  print('16 h 00');
-                                },
-                                child: Text('16h00'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('Confirm'),
-                          onPressed: () {
-                            print('Opa!');
-                          },
-                        ),
-                      ],
-                    ));
+                builder: (context) =>
+                    ConsultaDialog(context, _calendarioStore, _consultasDao));
           },
           backgroundColor: Colors.purple,
           child: Text('+', style: TextStyle(fontFamily: 'Ruda', fontSize: 24)),
@@ -95,13 +65,42 @@ class CalendarioConsulta extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Observer(builder: (_) {
                 return Text(
-                  mascaraData(_calendarioStore.date),
+                  mascaraData(_calendarioStore.dataConsulta),
                   style: TextStyle(
                       fontFamily: 'Ruda', fontSize: 24, color: Colors.black),
                 );
               }),
             ),
-            Text('Bottom'),
+            Container(
+              height: MediaQuery.of(context).size.height*0.7,
+              child: Observer(
+                builder: (context) {
+                  return FutureBuilder(
+                    future: _getConsultas(),
+                    builder: (context, snapshot) {
+                      final List<Consulta> _lista = snapshot.data;
+                      switch (snapshot.connectionState){
+                        case ConnectionState.waiting:
+                          return Center(child: CircularProgressIndicator());
+                        case ConnectionState.none:
+                          break;
+                        case ConnectionState.active:
+                          break;
+                        case ConnectionState.done:
+                          return ListView.builder(
+                            itemCount: _lista == null ? 0 : _lista.length,
+                            itemBuilder: (context, index) {
+                              _consultasDao.getAllData(_calendarioStore.dataConsulta);
+                              return CardConsulta(_lista[index], _clientesStore);
+                            },
+                          );
+                      }
+                      return Text('Unknown error');
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ));
   }
@@ -109,13 +108,25 @@ class CalendarioConsulta extends StatelessWidget {
   Future<DateTime> _selectDate(BuildContext context) async {
     DateTime _datePicked = await showDatePicker(
       context: context,
-      initialDate: _calendarioStore.date,
+      initialDate: _calendarioStore.dataConsulta,
       firstDate: DateTime(1991),
       lastDate: DateTime(2040),
     );
 
     if (_datePicked != null && _datePicked != DateTime.now()) {
       return _datePicked;
+    }
+  }
+
+  Future<ObservableList<Consulta>> _getConsultas() async {
+    _clientesStore = ClientesStore();
+    _clientesStore.clientesList = await ClientDao().getAllClientes();
+
+    if (_calendarioStore.listaConsultas.isEmpty ||
+        _calendarioStore.listaConsultas == null) {
+      return List();
+    } else {
+      return _calendarioStore.listaConsultas;
     }
   }
 }

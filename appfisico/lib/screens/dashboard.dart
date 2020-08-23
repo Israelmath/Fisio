@@ -16,8 +16,7 @@ class Dashboard extends StatelessWidget {
       body: Column(
         children: <Widget>[
           HeadDashboard(),
-          SearchBar(),
-          NextInterviews(),
+          ProximasConsultas(),
         ],
       ),
     );

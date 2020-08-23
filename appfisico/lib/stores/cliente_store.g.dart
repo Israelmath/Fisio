@@ -39,11 +39,11 @@ mixin _$ClientesStore on _ClientesStore, Store {
   }
 
   @override
-  void adicionaCliente(List<dynamic> clienteList, Cliente cliente) {
+  void adicionaCliente(Cliente cliente) {
     final _$actionInfo = _$_ClientesStoreActionController.startAction(
         name: '_ClientesStore.adicionaCliente');
     try {
-      return super.adicionaCliente(clienteList, cliente);
+      return super.adicionaCliente(cliente);
     } finally {
       _$_ClientesStoreActionController.endAction(_$actionInfo);
     }

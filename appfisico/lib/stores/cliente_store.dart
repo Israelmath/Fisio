@@ -15,7 +15,7 @@ abstract class _ClientesStore with Store{
   }
 
   @action
-  void adicionaCliente(List clienteList, Cliente cliente){
-    clienteList.add(cliente);
+  void adicionaCliente(Cliente cliente){
+    clientesList.add(cliente);
   }
 }

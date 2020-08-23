@@ -1,4 +1,4 @@
-import 'package:appfisico/components/dialog_avaliacao.dart';
+import 'package:appfisico/components/dialogs/dialog_avaliacao.dart';
 import 'package:flutter/material.dart';
 
 class CardAvaliacao extends StatelessWidget {

@@ -17,7 +17,7 @@ class ClientDao {
   final String particularColumn = 'cpfColumn';
   final String fotoUrlColumn = 'fotoUrlColumn';
 
-  final String dbConfig = "CREATE TABLE IF NOT EXISTS clienteTable ("
+  final String dbConfigCliente = "CREATE TABLE IF NOT EXISTS clienteTable ("
       "idColumn INTEGER PRIMARY KEY,"
       "nameColumn TEXT,"
       "sobrenomeColumn TEXT,"
@@ -27,6 +27,16 @@ class ClientDao {
       "particularColumn INTEGER,"
       "avaliacaoColumn TEXT,"
       "fotoUrlColumn TEXT)";
+
+  final String dbConfigConsulta = "CREATE TABLE IF NOT EXISTS consultaTable ("
+      "idColumn INTEGER PRIMARY KEY,"
+      "tituloColumn TEXT,"
+      "evolucaoColumn TEXT,"
+      "dataConsultaColumn INTEGER,"
+      "horaInicioColumn INTEGER,"
+      "horaTerminoColumn INTEGER,"
+      "idClienteColumn INTEGER,"
+      "nivelDorColumn INTEGER)";
 
   final String nomeDb = 'calendor.db';
   static final ClientDao _instance = ClientDao.internal();
@@ -52,14 +62,15 @@ class ClientDao {
 
     return await openDatabase(path, version: 1, onDowngrade: onDatabaseDowngradeDelete,
         onCreate: (Database db, int newerVersion) async {
-      await db.execute(dbConfig);
+      await db.execute(dbConfigCliente);
+      await db.execute(dbConfigConsulta);
     });
   }
 
   Future<Cliente> saveCliente(Cliente cliente) async {
     Database dbCliente = await db;
     cliente.id = await dbCliente.insert(clienteTable, cliente.toMap()).catchError((erro)=>debugPrint('$erro'));
-    debugPrint('$cliente');
+    debugPrint('Cliente save:${cliente.toMap()}');
     return cliente;
   }
 

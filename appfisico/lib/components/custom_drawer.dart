@@ -1,4 +1,5 @@
 import 'package:appfisico/components/drawer_tile.dart';
+import 'package:appfisico/screens/calendario_consulta.dart';
 import 'package:appfisico/screens/novo_cliente.dart';
 import 'package:flutter/material.dart';
 
@@ -82,8 +83,8 @@ class CustomDrawer extends StatelessWidget {
                 color: Colors.transparent,
               ),
               DrawerTile('Início', Icons.home),
-              DrawerTile('Consultas', Icons.assignment),
-              DrawerTile('Pacientes', Icons.person),
+              DrawerTile('Consultas', Icons.assignment, whereToGo: 'Consultas'),
+              DrawerTile('Pacientes', Icons.person, whereToGo: 'Pacientes'),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 33, vertical: 260),
@@ -92,10 +93,9 @@ class CustomDrawer extends StatelessWidget {
                     child: Text(
                       'Adicionar cliente',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Ruda'
-                      ),
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Ruda'),
                     ),
                     onPressed: () {
                       Navigator.pop(context);

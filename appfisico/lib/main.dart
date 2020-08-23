@@ -24,7 +24,7 @@ class Fisio extends StatelessWidget {
           textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.purple[600],),
           primaryColor: Colors.purple[600],
         ),
-        home: CalendarioConsulta(),
+        home: Dashboard(),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appfisico/auxiliar/auxiliar_functions.dart';
 import 'package:appfisico/models/cliente.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,7 +91,7 @@ class ClienteHeader extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage('images/person.png'),
+                  image: _getImage(),
                 ),
               ),
             ),
@@ -97,5 +99,11 @@ class ClienteHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+  _getImage(){
+    if(_cliente.fotoUrl == null){
+      return AssetImage('images/person.png');
+    }
+    else return FileImage(File(_cliente.fotoUrl));
   }
 }
