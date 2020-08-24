@@ -6,17 +6,22 @@ import 'package:appfisico/models/cliente.dart';
 import 'package:appfisico/models/consulta.dart';
 import 'package:appfisico/stores/cliente_store.dart';
 import 'package:flutter/material.dart';
+import 'package:mobx/src/api/observable_collections.dart';
 import 'package:provider/provider.dart';
 
 class CardConsulta extends StatelessWidget {
   Consulta _consulta;
   Cliente _cliente;
-  ClientesStore _clientesStore;
+  ClientesStore _clientesStore = ClientesStore();
+  List<Cliente> clientes;
 
-  CardConsulta(this._consulta, this._clientesStore);
+  CardConsulta(this._consulta, this.clientes);
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('Olá!');
+    print(clientes);
+    _clientesStore.clientesList = _getClientes() as ObservableList;
     print('Consulta: $_consulta\n');
     print('Cliente: ${_clientesStore.clientesList}');
     for (Cliente c in _clientesStore.clientesList) {
@@ -152,5 +157,9 @@ class CardConsulta extends StatelessWidget {
     } else {
       return FileImage(File(_cliente.fotoUrl));
     }
+  }
+  Future<List<Cliente>> _getClientes() async {
+    ClientDao _clienteDao = ClientDao();
+    return await _clienteDao.getAllClientes();
   }
 }

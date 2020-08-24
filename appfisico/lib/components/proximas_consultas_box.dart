@@ -24,9 +24,29 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
   ClientDao _clienteDao = ClientDao();
   ClientesStore _clienteStore;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    _clienteDao.getAllClientes().then((clienteLista){
+      _clienteStore.clientesList = clienteLista.asObservable();
+    });
+    _consultasDao.getProximasConsultas().then((consultasLista){
+      _consultasStore.listaConsultas = consultasLista.asObservable();
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    for(Consulta con in _consultasStore.listaConsultas){
+      print(con);
+    }
+    for(Cliente cli in _clienteStore.clientesList){
+      print(cli);
+    }
 
     return Container(
       width: size.width - 16,
@@ -58,8 +78,9 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
           Expanded(
             child: Observer(
               builder: (_) {
-                return FutureBuilder(
-                  future: _getInfo(),
+                return FutureBuilder<List>(
+                  initialData: List(),
+                  future: _clienteDao.getAllClientes(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -72,6 +93,8 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
                       case ConnectionState.active:
                         break;
                       case ConnectionState.done:
+                        print('Entrou no done: ${snapshot.data}');
+                        final List<Cliente> _listaClientes = snapshot.data;
                         return ListView.builder(
                           padding: EdgeInsets.all(8.0),
                           itemCount: _consultasStore.listaConsultas.length,
@@ -80,7 +103,8 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
                               height: 100,
                               padding: EdgeInsets.only(top: 4),
                               child: CardConsulta(
-                                  _consultasStore.listaConsultas[index], _clienteStore),
+                                  _consultasStore.listaConsultas[index],
+                              _listaClientes),
                             );
                           },
                         );
@@ -94,13 +118,5 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
         ],
       ),
     );
-  }
-
-  _getInfo() async {
-    _consultasStore = CalendarioStore();
-    _consultasDao.getProximasConsultas() = _consultasStore.listaConsultas as Observable;
-    _clienteDao.getAllClientes().then((clientesList) {
-      _clienteStore.clientesList = clientesList.asObservable();
-    });
   }
 }

@@ -80,18 +80,17 @@ class CalendarioConsulta extends StatelessWidget {
                     builder: (context, snapshot) {
                       final List<Consulta> _lista = snapshot.data;
                       switch (snapshot.connectionState){
+                        case ConnectionState.active:
                         case ConnectionState.waiting:
                           return Center(child: CircularProgressIndicator());
                         case ConnectionState.none:
-                          break;
-                        case ConnectionState.active:
                           break;
                         case ConnectionState.done:
                           return ListView.builder(
                             itemCount: _lista == null ? 0 : _lista.length,
                             itemBuilder: (context, index) {
                               _consultasDao.getAllData(_calendarioStore.dataConsulta);
-                              return CardConsulta(_lista[index], _clientesStore);
+                              return CardConsulta(_lista[index], List());
                             },
                           );
                       }
@@ -121,6 +120,7 @@ class CalendarioConsulta extends StatelessWidget {
   Future<ObservableList<Consulta>> _getConsultas() async {
     _clientesStore = ClientesStore();
     _clientesStore.clientesList = await ClientDao().getAllClientes();
+    print('_clientesStore: ${_clientesStore.clientesList}');
 
     if (_calendarioStore.listaConsultas.isEmpty ||
         _calendarioStore.listaConsultas == null) {
