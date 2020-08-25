@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-AlertDialog ConsultaDialog(BuildContext context, CalendarioStore calendarioStore, ConsultasDao consultasDao) {
+AlertDialog ConsultaDialog(BuildContext context, ConsultaStore calendarioStore, ConsultasDao consultasDao) {
   final Consulta _consulta = Consulta();
-  CalendarioStore _calendarioStore = calendarioStore;
+  ConsultaStore _calendarioStore = calendarioStore;
 
   ClientesStore _clientesStore = Provider.of<ClientesStore>(context);
 
@@ -80,9 +80,9 @@ AlertDialog ConsultaDialog(BuildContext context, CalendarioStore calendarioStore
                     showTimePicker(
                         context: context, initialTime: TimeOfDay.now())
                         .then((hora) {
-                      _consulta.horaIcinio =
+                      _consulta.horaInicio =
                           DateTime(2020, 1, 1, hora.hour, hora.minute);
-                      _calendarioStore.horaIcinio = _consulta.horaIcinio;
+                      _calendarioStore.horaIcinio = _consulta.horaInicio;
                     });
                   },
                   child: Observer(
@@ -141,13 +141,13 @@ AlertDialog ConsultaDialog(BuildContext context, CalendarioStore calendarioStore
 }
 
 
-void _send(CalendarioStore calendarioStore, Consulta consulta, ConsultasDao consultasDao) {
+void _send(ConsultaStore calendarioStore, Consulta consulta, ConsultasDao consultasDao) {
   calendarioStore.add(consulta);
   consultasDao.saveConsulta(consulta);
   consulta = Consulta();
 }
 
-void _setDate(BuildContext context, Consulta consulta, CalendarioStore calendarioStore) {
+void _setDate(BuildContext context, Consulta consulta, ConsultaStore calendarioStore) {
   showDatePicker(
       context: context,
       initialDate: DateTime.now(),

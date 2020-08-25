@@ -6,7 +6,7 @@ import 'package:mobx/src/api/observable_collections.dart';
 
 class HeaderNovaConsulta extends StatelessWidget {
   Size size;
-  CalendarioStore _calendarioStore;
+  ConsultaStore _calendarioStore;
 
   HeaderNovaConsulta(this._calendarioStore);
 

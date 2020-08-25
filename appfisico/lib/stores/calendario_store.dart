@@ -5,7 +5,7 @@ import 'package:appfisico/models/consulta.dart';
 import 'package:mobx/mobx.dart';
 part 'calendario_store.g.dart';
 
-class CalendarioStore = _CalendarioStore with _$CalendarioStore;
+class ConsultaStore = _CalendarioStore with _$CalendarioStore;
 
 abstract class _CalendarioStore with Store{
 

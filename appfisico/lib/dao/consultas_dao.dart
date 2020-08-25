@@ -1,10 +1,12 @@
 import 'package:appfisico/models/consulta.dart';
+import 'package:appfisico/models/consulta_info.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
 class ConsultasDao {
+  final String clienteTable = 'clienteTable';
   final String consultaTable = 'consultaTable';
   final String idColumn = 'idColumn';
   final String titulo = 'tituloColumn';
@@ -129,15 +131,15 @@ class ConsultasDao {
     return consultasDoDia;
   }
 
-  Future<List<Consulta>> getProximasConsultas() async {
+  Future<List<ConsultaInfo>> getProximasConsultas() async {
     Database dbCosulta = await db;
-    List<Consulta> proximasConsultas = List();
+    List<ConsultaInfo> proximasConsultas = List();
     List<Map> consultasMap = await dbCosulta.rawQuery(
-      'SELECT * FROM $consultaTable ORDER BY $dataConsulta LIMIT 7'
+      'SELECT * FROM $consultaTable cst JOIN $clienteTable clt ON clt.$idColumn = cst.$idCliente ORDER BY cst.$dataConsulta LIMIT 2'
     );
 
     for (Map consulta in consultasMap){
-      proximasConsultas.add(Consulta.fromMap(consulta));
+      proximasConsultas.add(ConsultaInfo.fromMap(consulta));
     }
     return proximasConsultas;
   }

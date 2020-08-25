@@ -16,14 +16,14 @@ import 'package:provider/provider.dart';
 import 'headers/nova_consulta_head.dart';
 
 class CalendarioConsulta extends StatelessWidget {
-  CalendarioStore _calendarioStore;
+  ConsultaStore _calendarioStore;
   ConsultasDao _consultasDao;
   ClientesStore _clientesStore;
 
   @override
   Widget build(BuildContext context) {
     _consultasDao = ConsultasDao();
-    _calendarioStore = CalendarioStore();
+    _calendarioStore = ConsultaStore();
     _consultasDao.getAllData(DateTime.now()).then((list) {
       _calendarioStore.listaConsultas = list.asObservable();
     });

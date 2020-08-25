@@ -5,7 +5,7 @@ class Consulta{
   String titulo;
   String evolucao = '';
   DateTime dataConsulta;
-  DateTime horaIcinio;
+  DateTime horaInicio;
   DateTime horaTermino;
   int idCliente;
   int nivelDor = 0;
@@ -17,7 +17,7 @@ class Consulta{
     titulo = map['tituloColumn'];
     evolucao = map['evolucaoColumn'];
     dataConsulta = DateTime.fromMicrosecondsSinceEpoch(map['dataConsultaColumn']);
-    horaIcinio = DateTime.fromMicrosecondsSinceEpoch(map['horaInicioColumn']);
+    horaInicio = DateTime.fromMicrosecondsSinceEpoch(map['horaInicioColumn']);
     horaTermino = DateTime.fromMicrosecondsSinceEpoch(map['horaTerminoColumn']);
     idCliente = map['idClienteColumn'];
     nivelDor = map['nivelDorColumn'];
@@ -28,7 +28,7 @@ class Consulta{
       'tituloColumn': titulo,
       'evolucaoColumn': evolucao,
       'dataConsultaColumn': dataConsulta.microsecondsSinceEpoch,
-      'horaInicioColumn': horaIcinio.microsecondsSinceEpoch,
+      'horaInicioColumn': horaInicio.microsecondsSinceEpoch,
       'horaTerminoColumn': horaTermino.microsecondsSinceEpoch,
       'idClienteColumn': idCliente,
       'nivelDorColumn': nivelDor
@@ -41,6 +41,6 @@ class Consulta{
 
   @override
   String toString() {
-    return 'Consulta{id: $id, titulo: $titulo, evolucao: $evolucao, dataConsulta: $dataConsulta, horaIcinio: $horaIcinio, horaTermino: $horaTermino, idCliente: $idCliente, nivelDor: $nivelDor}';
+    return 'Consulta{id: $id, titulo: $titulo, evolucao: $evolucao, dataConsulta: $dataConsulta, horaIcinio: $horaInicio, horaTermino: $horaTermino, idCliente: $idCliente, nivelDor: $nivelDor}';
   }
 }

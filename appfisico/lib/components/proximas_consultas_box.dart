@@ -5,6 +5,7 @@ import 'package:appfisico/dao/cliente_dao.dart';
 import 'package:appfisico/dao/consultas_dao.dart';
 import 'package:appfisico/models/cliente.dart';
 import 'package:appfisico/models/consulta.dart';
+import 'package:appfisico/models/consulta_info.dart';
 import 'package:appfisico/screens/cliente_tela.dart';
 import 'package:appfisico/stores/calendario_store.dart';
 import 'package:appfisico/stores/cliente_store.dart';
@@ -19,34 +20,17 @@ class ProximasConsultas extends StatefulWidget {
 }
 
 class _ProximasConsultasState extends State<ProximasConsultas> {
-  ConsultasDao _consultasDao = ConsultasDao();
-  CalendarioStore _consultasStore;
-  ClientDao _clienteDao = ClientDao();
+  ConsultaStore _consultasStore;
   ClientesStore _clienteStore;
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    _clienteDao.getAllClientes().then((clienteLista){
-      _clienteStore.clientesList = clienteLista.asObservable();
-    });
-    _consultasDao.getProximasConsultas().then((consultasLista){
-      _consultasStore.listaConsultas = consultasLista.asObservable();
-    });
-
-  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    for(Consulta con in _consultasStore.listaConsultas){
-      print(con);
-    }
-    for(Cliente cli in _clienteStore.clientesList){
-      print(cli);
-    }
+    _consultasStore = Provider.of<ConsultaStore>(context);
+    _clienteStore = Provider.of<ClientesStore>(context);
+    ConsultasDao().getProximasConsultas().then((consultas){
+      for (ConsultaInfo ci in consultas) print(ci);
+    });
 
     return Container(
       width: size.width - 16,
@@ -76,43 +60,8 @@ class _ProximasConsultasState extends State<ProximasConsultas> {
             color: Colors.teal,
           ),
           Expanded(
-            child: Observer(
-              builder: (_) {
-                return FutureBuilder<List>(
-                  initialData: List(),
-                  future: _clienteDao.getAllClientes(),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        break;
-                      case ConnectionState.waiting:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                        break;
-                      case ConnectionState.active:
-                        break;
-                      case ConnectionState.done:
-                        print('Entrou no done: ${snapshot.data}');
-                        final List<Cliente> _listaClientes = snapshot.data;
-                        return ListView.builder(
-                          padding: EdgeInsets.all(8.0),
-                          itemCount: _consultasStore.listaConsultas.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 100,
-                              padding: EdgeInsets.only(top: 4),
-                              child: CardConsulta(
-                                  _consultasStore.listaConsultas[index],
-                              _listaClientes),
-                            );
-                          },
-                        );
-                    }
-                    return Text('Não rolou...');
-                  },
-                );
-              },
+            child: Center(
+              child: CircularProgressIndicator(backgroundColor: Colors.white,),
             ),
           )
         ],

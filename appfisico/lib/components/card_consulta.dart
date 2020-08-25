@@ -45,7 +45,7 @@ class CardConsulta extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                      '${_consulta.horaIcinio.hour} h ${_consulta.horaIcinio.minute}',
+                      '${_consulta.horaInicio.hour} h ${_consulta.horaInicio.minute}',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -91,7 +91,7 @@ class CardConsulta extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
-                                    '${_consulta.horaIcinio.hour} h ${_consulta.horaIcinio.minute} '
+                                    '${_consulta.horaInicio.hour} h ${_consulta.horaInicio.minute} '
                                     '- ${_consulta.horaTermino.hour} h ${_consulta.horaTermino.minute}',
                                     style: TextStyle(
                                         color: Colors.black,
